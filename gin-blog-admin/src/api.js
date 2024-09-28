@@ -91,4 +91,10 @@ export default {
   getPages: () => request.get('/page/list'),
   saveOrUpdatePage: data => request.post('/page', data),
   deletePage: (data = []) => request.delete('/page', { data }),
+  // 文件上传
+  uploadFileSave: data => request.post('/upload', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }),
 }

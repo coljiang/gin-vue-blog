@@ -12,6 +12,7 @@ import UploadOne from '@/components//UploadOne.vue'
 import { articleTypeOptions } from '@/assets/config'
 import { useTagStore } from '@/store'
 import api from '@/api'
+import { convertImgUrl } from '@/utils/index.js';
 
 defineOptions({ name: '发布文章' })
 
@@ -22,6 +23,32 @@ const tagStore = useTagStore()
 const categoryOptions = ref([]) // 分类选项
 const tagOptions = ref([]) // 标签选项
 let backTagOptions = [] // 备份标签选项
+
+// 在发布文章组件中上传图片
+async function onUploadImg(files, callback) {
+  const res = await Promise.all(
+    files.map((file) => {
+      return new Promise((rev, rej) => {
+        const form = new FormData()
+        form.append('file', file)
+        api.uploadFileSave(form)
+          .then(res => rev(res))
+          .catch(error => rej(error))
+      })
+    }),
+  )
+  const apiRes = res[0]
+  let picPath = ''
+  if (apiRes.code !== 0) {
+    $message?.error('上传图片失败')
+    console.log(res)
+    return
+  }
+  else {
+    picPath = convertImgUrl(apiRes.data)
+  }
+  callback([picPath])
+}
 
 // 解决同时查看多篇文章, 切换标签不刷新的问题
 watch(route, async () => tagStore.reloadTag())
@@ -154,6 +181,7 @@ function renderTag(tag, index) {
     { default: () => tag },
   )
 }
+
 </script>
 
 <template>
@@ -180,7 +208,7 @@ function renderTag(tag, index) {
     </div>
 
     <!-- TODO: 文件上传 -->
-    <MdEditor v-model="formModel.content" style="height: calc(100vh - 245px)" />
+    <MdEditor v-model="formModel.content" style="height: calc(100vh - 245px)" @onUploadImg="onUploadImg" />
 
     <CrudModal
       v-model:visible="modalVisible"
