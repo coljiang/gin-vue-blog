@@ -93,14 +93,14 @@ function openForget() {
         <button class="w-full rounded-lg bg-blue py-2 text-white hover:bg-light-blue" @click="handleLogin">
           登录
         </button>
-        <div class="mt-4 flex justify-between">
-          <button @click="openRegister">
-            立即注册
-          </button>
-          <button @click="openForget">
-            忘记密码？
-          </button>
-        </div>
+<!--        <div class="mt-4 flex justify-between">-->
+<!--          <button @click="openRegister">-->
+<!--            立即注册-->
+<!--          </button>-->
+<!--          <button @click="openForget">-->
+<!--            忘记密码？-->
+<!--          </button>-->
+<!--        </div>-->
       <!-- TODO: 第三方登录 -->
       <!-- <div text-center text-10 color="#aaa">
           社交帐号登录

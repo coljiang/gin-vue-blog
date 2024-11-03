@@ -67,9 +67,9 @@ func (*Article) SaveOrUpdate(c *gin.Context) {
 	db := GetDB(c)
 	auth, _ := CurrentUserAuth(c)
 
-	if req.Img == "" {
-		req.Img = model.GetConfig(db, g.CONFIG_ARTICLE_COVER) // 默认图片
-	}
+	//if req.Img == "" {
+	//	req.Img = model.GetConfig(db, g.CONFIG_ARTICLE_COVER) // 默认图片
+	//}
 
 	if req.Type == 0 {
 		req.Type = 1 // 默认为原创

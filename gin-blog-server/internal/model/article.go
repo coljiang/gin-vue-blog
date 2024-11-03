@@ -232,13 +232,16 @@ func UpdateArticleSoftDelete(db *gorm.DB, ids []int, isDelete bool) (int64, erro
 // 新增/编辑文章, 同时根据 分类名称, 标签名称 维护关联表
 func SaveOrUpdateArticle(db *gorm.DB, article *Article, categoryName string, tagNames []string) error {
 	return db.Transaction(func(tx *gorm.DB) error {
+		var result *gorm.DB
 		// 分类不存在则创建
-		category := Category{Name: categoryName}
-		result := db.Model(&Category{}).Where("name", categoryName).FirstOrCreate(&category)
-		if result.Error != nil {
-			return result.Error
+		if categoryName != "" {
+			category := Category{Name: categoryName}
+			result = db.Model(&Category{}).Where("name", categoryName).FirstOrCreate(&category)
+			if result.Error != nil {
+				return result.Error
+			}
+			article.CategoryId = category.ID
 		}
-		article.CategoryId = category.ID
 
 		// 先 添加/更新 文章, 获取到其 ID
 		if article.ID == 0 {
@@ -257,20 +260,23 @@ func SaveOrUpdateArticle(db *gorm.DB, article *Article, categoryName string, tag
 		}
 
 		var articleTags []ArticleTag
-		for _, tagName := range tagNames {
-			// 标签不存在则创建
-			tag := Tag{Name: tagName}
-			result := db.Model(&Tag{}).Where("name", tagName).FirstOrCreate(&tag)
-			if result.Error != nil {
-				return result.Error
+		if tagNames != nil && len(tagNames) > 0 {
+			for _, tagName := range tagNames {
+				// 标签不存在则创建
+				tag := Tag{Name: tagName}
+				result := db.Model(&Tag{}).Where("name", tagName).FirstOrCreate(&tag)
+				if result.Error != nil {
+					return result.Error
+				}
+				articleTags = append(articleTags, ArticleTag{
+					ArticleId: article.ID,
+					TagId:     tag.ID,
+				})
 			}
-			articleTags = append(articleTags, ArticleTag{
-				ArticleId: article.ID,
-				TagId:     tag.ID,
-			})
+			result = db.Create(&articleTags)
+			return result.Error
 		}
-		result = db.Create(&articleTags)
-		return result.Error
+		return nil
 	})
 }
 

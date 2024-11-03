@@ -157,13 +157,13 @@ async function handleSave() {
 }
 
 const rules = {
-  category_name: {
-    required: true,
-    message: '请选择文章分类',
-    trigger: ['blur', 'change'],
-  },
+  // category_name: {
+  //   required: true,
+  //   message: '请选择文章分类',
+  //   trigger: ['blur', 'change'],
+  // },
   tag_names: {
-    required: true,
+    required: false,
     message: '请选择文章标签',
   },
 }
@@ -225,15 +225,7 @@ function renderTag(tag, index) {
         :model="formModel"
         :rules="rules"
       >
-        <NFormItem label="文章分类" path="category_name">
-          <NSelect
-            v-model:value="formModel.category_name"
-            style="width: 50%"
-            clearable filterable tag
-            placeholder="关键字搜索，enter 添加"
-            :options="categoryOptions"
-          />
-        </NFormItem>
+
         <NFormItem label="文章标签" path="tag_names">
           <NDynamicTags
             v-model:value="formModel.tag_names"
@@ -259,14 +251,7 @@ function renderTag(tag, index) {
             </template>
           </NDynamicTags>
         </NFormItem>
-        <NFormItem label="文章类型" path="type">
-          <NSelect
-            v-model:value="formModel.type"
-            style="width: 50%"
-            placeholder="请选择文章分类"
-            :options="articleTypeOptions"
-          />
-        </NFormItem>
+
         <!-- <n-form-item label="文章描述" path="desc">
           <n-input
             v-model:value="formModel.desc"
@@ -285,12 +270,7 @@ function renderTag(tag, index) {
             placeholder="请填写原文连接"
           />
         </NFormItem>
-        <NFormItem label="文章缩略图" path="img">
-          <UploadOne
-            v-model:preview="formModel.img"
-            :width="220"
-          />
-        </NFormItem>
+
         <NFormItem label="置顶" path="is_top">
           <NSwitch v-model:value="formModel.is_top" />
         </NFormItem>
@@ -305,6 +285,21 @@ function renderTag(tag, index) {
               </NRadio>
             </NSpace>
           </NRadioGroup>
+        </NFormItem>
+        <NFormItem label="文章缩略图" path="img">
+          <UploadOne
+            v-model:preview="formModel.img"
+            :width="220"
+          />
+        </NFormItem>
+        <NFormItem label="文章分类" path="category_name">
+          <NSelect
+            v-model:value="formModel.category_name"
+            style="width: 50%"
+            clearable filterable tag
+            placeholder="关键字搜索，enter 添加"
+            :options="categoryOptions"
+          />
         </NFormItem>
       </NForm>
     </CrudModal>

@@ -40,12 +40,15 @@ const isRightClass = computed(() => props.idx % 2 === 0
         <span class="flex items-center">
           <span class="i-mdi-calendar-month-outline mr-1" /> {{ dayjs(article.created_at).format('YYYY-MM-DD') }}
         </span>
-        <span class="mx-1.5">|</span>
+        <span v-if="article.category_id && article.category_id !== ''" class="mx-1.5">|</span>
         <!-- 分类 -->
-        <RouterLink :to="`/categories/${article.category_id}?name=${article.category?.name}`" class="flex items-center">
+        <RouterLink
+          v-if="article.category_id && article.category_id !== ''"
+          :to="`/categories/${article.category_id}?name=${article.category?.name}`"
+          class="flex items-center">
           <span class="i-mdi-inbox-full mr-1" /> {{ article.category?.name }}
         </RouterLink>
-        <span class="mx-1.5">|</span>
+        <span v-if="article.tags && article.tags.length > 1" class="mx-1.5">|</span>
         <!-- 标签 -->
         <div class="flex gap-1">
           <RouterLink v-for="tag in article.tags" :key="tag.id" :to="`/tags/${tag.id}?name=${tag.name}`" class="flex items-center">
